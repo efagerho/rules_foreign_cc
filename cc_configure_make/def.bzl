@@ -38,8 +38,13 @@ def _cc_configure_make_impl(ctx):
             "tmpinstalldir=$(mktemp -d)",
             "trap \"{ rm -rf $tmpdir $tmpinstalldir; }\" EXIT",
             "pushd $tmpdir",
+	    "echo XXX",
+	    "echo P is $P",
+	    "ls -l $P/{}",
+	    "pushd $P/{}",
             "CFLAGS={} CXXFLAGS={} $P/{}/configure --prefix=$tmpinstalldir {}".format(
                 CFLAGS, CXXFLAGS, ctx.attr.src.label.workspace_root, ' '.join(ctx.attr.configure_flags)),
+	    "popd",
             "CFLAGS={} CXXFLAGS={} make install".format(CFLAGS, CXXFLAGS),
             "popd",
             "cp $tmpinstalldir/{} {}".format(ctx.attr.out_lib_path, out_lib.path),
